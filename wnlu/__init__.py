@@ -1,0 +1,2 @@
+from wnlu.translate.WinogradSchema import WinogradSchema
+from wnlu.translate.WinogradTranslator import WinogradTranslator
