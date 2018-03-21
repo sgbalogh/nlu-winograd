@@ -43,12 +43,12 @@ import wnlu
 ## parses all of the examples from the XML document:
 translator = wnlu.WinogradTranslator()
 
-## This loops through the instances and prints out
+## This loops through the dev set instances and prints out
 ## the original premise content:
-for instance in translator.schemata:
+for instance in translator.get_dev_set():
   print(instance.get_premise())
 
-winograd_example = translator.schemata[0]
+winograd_example = translator.get_dev_set()[0]
 print(winograd_example.get_premise())
 
 ## Get a list of the two possible translations of the

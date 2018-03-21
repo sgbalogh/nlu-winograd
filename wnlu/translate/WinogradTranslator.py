@@ -3,7 +3,15 @@ import xml.etree.ElementTree as et
 
 class WinogradTranslator:
     def __init__(self):
-        self.schemata = WinogradTranslator.load_xml("datasets/winograd/WSCollection.xml")
+        schemata = WinogradTranslator.load_xml("datasets/winograd/WSCollection.xml")
+        self.dev_set = schemata[0:141]
+        self.test_set = schemata[141:]
+
+    def get_dev_set(self):
+        return self.dev_set
+
+    def get_test_set(self):
+        return self.test_set
 
     @staticmethod
     def load_xml(winograd_xml_path):
