@@ -1,3 +1,16 @@
+This is an edited version of the code found at https://github.com/nyu-mll/multiNLI
+Changes made:
+- Compatability with Python 3
+- Issue related to tokenization of SNLI dataset fixed
+- Import statements fixed
+
+Please create a folder called 'data' with the following contents, unzipped:
+https://www.nyu.edu/projects/bowman/multinli/multinli_0.9.zip
+https://nlp.stanford.edu/projects/snli/snli_1.0.zip
+http://nlp.stanford.edu/data/glove.840B.300d.zip
+
+Below is the original README
+
 # Baseline Models for MultiNLI Corpus
 
 This is the code we used to establish baselines for the MultiNLI corpus introduced in [A Broad-Coverage Challenge Corpus for Sentence Understanding through Inference](https://arxiv.org/pdf/1704.05426.pdf).
