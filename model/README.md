@@ -1,4 +1,5 @@
 This is an edited version of the code found at https://github.com/nyu-mll/multiNLI
+
 Changes made:
 - Compatability with Python 3
 - Issue related to tokenization of SNLI dataset fixed
@@ -6,7 +7,9 @@ Changes made:
 
 Please create a folder called 'data' with the following contents, unzipped:
 https://www.nyu.edu/projects/bowman/multinli/multinli_0.9.zip
+
 https://nlp.stanford.edu/projects/snli/snli_1.0.zip
+
 http://nlp.stanford.edu/data/glove.840B.300d.zip
 
 Below is the original README
