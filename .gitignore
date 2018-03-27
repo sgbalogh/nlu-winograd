@@ -1,3 +1,4 @@
 datasets/multinli/*
 .idea/*
 __pycache__/
+__MACOSX
