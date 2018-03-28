@@ -6,11 +6,11 @@ class BasicTestSuite(unittest.TestCase):
     """Some tests of basic package functionality."""
 
     def test_translator_loads_davis_examples(self):
-        translator = wnlu.WinogradTranslator()
+        translator = wnlu.WinogradLoader()
         self.assertEqual(len(translator.get_dev_set()), 141)
 
     def test_translator_premise(self):
-        translator = wnlu.WinogradTranslator()
+        translator = wnlu.WinogradLoader()
         example = translator.get_dev_set()[0]
         self.assertEqual(example.get_premise(), "The city councilmen refused the demonstrators a permit because they feared violence.")
 

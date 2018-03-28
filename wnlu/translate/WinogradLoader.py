@@ -1,9 +1,9 @@
 from wnlu.translate import WinogradSchema
 import xml.etree.ElementTree as et
 
-class WinogradTranslator:
+class WinogradLoader:
     def __init__(self):
-        schemata = WinogradTranslator.load_xml("datasets/winograd/WSCollection.xml")
+        schemata = WinogradLoader.load_xml("datasets/winograd/WSCollection.xml")
         self.dev_set = schemata[0:141]
         self.test_set = schemata[141:]
 

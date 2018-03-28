@@ -1,1 +1,1 @@
-from wnlu.translate import WinogradTranslator
+from wnlu.translate import WinogradLoader
