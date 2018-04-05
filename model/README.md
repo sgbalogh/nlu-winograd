@@ -6,7 +6,9 @@ Changes made:
 - Import statements fixed
 
 Steps:
+
 - Please create a folder called 'data' with the following contents, unzipped:
+
 https://www.nyu.edu/projects/bowman/multinli/multinli_0.9.zip
 
 https://nlp.stanford.edu/projects/snli/snli_1.0.zip
@@ -17,7 +19,7 @@ http://nlp.stanford.edu/data/glove.840B.300d.zip
 
 https://nlp.stanford.edu/software/stanford-parser-full-2018-02-27.zip
 
--Create a folder called 'winograd' in 'data'.
+- Create a folder called 'winograd' in 'data'.
 
 - Run convertToJSON.py on command line and place resultant two files in 'winograd' folder
 
