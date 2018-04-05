@@ -13,7 +13,7 @@ https://nlp.stanford.edu/projects/snli/snli_1.0.zip
 
 http://nlp.stanford.edu/data/glove.840B.300d.zip
 
-- Download Stanford Parser from the link below, unzip and place in $HOME
+- Download Stanford Parser from the link below, unzip and place in a folder called 'apps'
 
 https://nlp.stanford.edu/software/stanford-parser-full-2018-02-27.zip
 
