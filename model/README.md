@@ -7,7 +7,7 @@ Changes made:
 
 Steps:
 
-- Please create a folder called 'data' with the following contents, unzipped:
+- Please create a folder called 'data' in the 'model' folder with the following contents, unzipped:
 
 https://www.nyu.edu/projects/bowman/multinli/multinli_0.9.zip
 
@@ -15,15 +15,15 @@ https://nlp.stanford.edu/projects/snli/snli_1.0.zip
 
 http://nlp.stanford.edu/data/glove.840B.300d.zip
 
-- Download Stanford Parser from the link below, unzip and place in a folder called 'apps'
+- Download Stanford Parser from the link below, unzip and place in a folder called 'apps' in the main folder
 
 https://nlp.stanford.edu/software/stanford-parser-full-2018-02-27.zip
 
-- Create a folder called 'winograd' in 'data'.
+- Create a folder called 'winograd' in the 'data' folder.
 
-- Run convertToJSON.py on command line and place resultant two files in 'winograd' folder
+- Run convertToJSON.py on command line and place resultant two files in 'winograd' folder.
 
-- Create a folder called 'logs'
+- Create a folder called 'logs' in the 'model' folder.
 
 
 Below is the original README
