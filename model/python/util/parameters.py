@@ -49,35 +49,12 @@ parser.add_argument("--test", action='store_true', help="Call if you want to onl
 
 args = parser.parse_args()
 
-"""
+
 # Check if test sets are available. If not, create an empty file.
-test_matched = "{}/multinli_0.9/multinli_0.9_test_matched_unlabeled.jsonl".format(args.datapath)
+#test_matched = "{}/winograd/winograd_dev_set.jsonl".format(args.datapath)
 
-if os.path.isfile(test_matched):
-    test_matched = "{}/multinli_0.9/multinli_0.9_test_matched_unlabeled.jsonl".format(args.datapath)
-    test_mismatched = "{}/multinli_0.9/multinli_0.9_test_matched_unlabeled.jsonl".format(args.datapath)
-    test_path = "{}/multinli_0.9/".format(args.datapath)
-else:
-    test_path = "{}/multinli_0.9/".format(args.datapath)
-    temp_file = os.path.join(test_path, "temp.jsonl")
-    io.open(temp_file, "wb")
-    test_matched = temp_file
-    test_mismatched = temp_file
-"""
-# Check if test sets are available. If not, create an empty file.
-test_matched = "{}/multinli_0.9/multinli_0.9_test_matched.jsonl".format(args.datapath)
 
-if os.path.isfile(test_matched):
-    test_matched = "{}/multinli_0.9/multinli_0.9_dev_matched.jsonl".format(args.datapath) #"{}/multinli_0.9/multinli_0.9_test_matched.jsonl".format(args.datapath)
-    test_mismatched = "{}/multinli_0.9/multinli_0.9_dev_mismatched.jsonl".format(args.datapath) #"{}/multinli_0.9/multinli_0.9_test_mismatched.jsonl".format(args.datapath)
-    test_path = "{}".format(args.datapath)
-else:
-    test_path = "{}".format(args.datapath)
-    temp_file = os.path.join(test_path, "temp.jsonl")
-    io.open(temp_file, "wb")
-    test_matched = temp_file
-    test_mismatched = temp_file
-
+test_path = "{}/winograd/".format(args.datapath)
 
 def load_parameters():
     FIXED_PARAMETERS = {
@@ -86,8 +63,8 @@ def load_parameters():
         "training_mnli": "{}/multinli_0.9/multinli_0.9_train.jsonl".format(args.datapath),
         "dev_matched": "{}/multinli_0.9/multinli_0.9_dev_matched.jsonl".format(args.datapath),
         "dev_mismatched": "{}/multinli_0.9/multinli_0.9_dev_mismatched.jsonl".format(args.datapath),
-        "test_matched": test_matched,
-        "test_mismatched": test_mismatched,
+        "dev_winograd": "{}/winograd/winograd_dev_set.jsonl".format(args.datapath),
+        "test_winograd": "{}/winograd/winograd_test_set.jsonl".format(args.datapath),
         "training_snli": "{}/snli_1.0/snli_1.0_train.jsonl".format(args.datapath),
         "dev_snli": "{}/snli_1.0/snli_1.0_dev.jsonl".format(args.datapath),
         "test_snli": "{}/snli_1.0/snli_1.0_test.jsonl".format(args.datapath),
