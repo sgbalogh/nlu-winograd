@@ -94,8 +94,8 @@ def get_json(dataset,f,parser,count):
     
     
 loader = wnlu.WinogradLoader()
-jar = '$HOME/stanford-parser-full-2018-02-27/stanford-parser.jar'
-model = '$HOME/stanford-parser-full-2018-02-27/stanford-parser-3.9.1-models.jar'
+jar = 'apps/stanford-parser-full-2018-02-27/stanford-parser.jar'
+model = 'apps/stanford-parser-full-2018-02-27/stanford-parser-3.9.1-models.jar'
 parser = StanfordParser(model, jar, encoding='utf8')
 
 f = open("winograd_dev_set.jsonl",'w')
