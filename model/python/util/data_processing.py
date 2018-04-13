@@ -37,6 +37,16 @@ def load_nli_data(path, snli=False):
         random.shuffle(data)
     return data
 
+def load_winograd_data(path):
+    data = []
+    with open(path) as f:
+        for line in f:
+            loaded_example = json.loads(line)
+            loaded_example["label"] = LABEL_MAP[loaded_example["gold_label"]]
+            loaded_example["genre"] = "winograd"
+            data.append(loaded_example)
+    return data
+
 def load_nli_data_genre(path, genre, snli=True):
     """
     Load a specific genre's examples from MultiNLI, or load SNLI data and assign a "snli" genre to the examples.
