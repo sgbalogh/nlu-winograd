@@ -1,22 +1,23 @@
 # nlu-winograd.py
 Models and code for addressing the Winograd Schema Challenge with training data from the SNLI/MultiNLI corpora.
 
+## Acknowledgements
+
+For convenience, this repository pre-packages some dependency code and data not created by the authors.
+
+- The dataset of Winograd Schemas at `./datasets/winograd/WSCollection.xml` is taken from [Ernest Davis's (NYU) website](https://cs.nyu.edu/faculty/davise/papers/WinogradSchemas/WS.html).
+- We package a modified implementation of the [baseline NLI models](https://github.com/nyu-mll/multiNLI) from the Machine Learning for Language Group at NYU, which is stored in `./model`
+
+
 ## Overview
 
-### Environment Setup
+### General Environment Setup
 
 First, install Python 3. Then, start by cloning this repository:
 
 ```bash
 git clone https://github.com/sgbalogh/nlu-winograd
 cd nlu-winograd
-```
-Next, make sure to grab a copy of the MultiNLI corpus and place it in `datasets/multinli`.
-
-```bash
-wget https://www.nyu.edu/projects/bowman/multinli/multinli_1.0.zip -P datasets/multinli
-cd datasets/multinli
-unzip multinli_1.0.zip
 ```
 
 Pre-requisites can be installed simply with:
@@ -29,6 +30,38 @@ Optionally, you can run the test suite with:
 ```bash
 make test
 ```
+
+### Model Training Environment Setup
+
+In order to run the TensorFlow NLI model implementations, some datasets need to be downloaded first.
+
+Create a `data` directory in `./model` containing an additional nested directory `winograd`; additionally, create a `logs` directory within `./model`:
+
+```bash
+mkdir -p ./model/data/winograd
+mkdir -p ./model/logs
+cd ./model/data
+```
+
+Then download and unzip SNLI, MNLI, and GloVe:
+```bash
+wget https://www.nyu.edu/projects/bowman/multinli/multinli_0.9.zip
+wget https://nlp.stanford.edu/projects/snli/snli_1.0.zip
+wget http://nlp.stanford.edu/data/glove.840B.300d.zip
+unzip ./*.zip
+```
+
+We also need the Stanford Parser, which should be stored in ./apps
+
+```bash
+cd nlu-winograd
+mkdir -p ./apps
+cd apps
+wget https://nlp.stanford.edu/software/stanford-parser-full-2018-02-27.zip
+unzip ./*.zip
+```
+
+Now you should be all set.
 
 ### Loading Winograd Schema Dev/Test instances
 
@@ -45,10 +78,10 @@ loader = wnlu.WinogradLoader()
 
 ## This loops through the dev set instances and prints out
 ## the original premise content:
-for instance in loader.get_dev_set():
+for instance in loader.get_train_set():
   print(instance.get_premise())
 
-winograd_example = loader.get_dev_set()[0]
+winograd_example = loader.get_train_set()[0]
 print(winograd_example.get_premise())
 
 ## Get a list of the two possible translations of the

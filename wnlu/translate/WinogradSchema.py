@@ -34,4 +34,3 @@ class WinogradSchema:
             else:
                 translations.append(self.premise_A + " " + pa + " " + self.premise_B)
         return translations
-

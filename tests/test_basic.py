@@ -5,13 +5,22 @@ import copy
 class BasicTestSuite(unittest.TestCase):
     """Some tests of basic package functionality."""
 
-    def test_translator_loads_davis_examples(self):
+    def test_translator_loads_davis_train(self):
         translator = wnlu.WinogradLoader()
-        self.assertEqual(len(translator.get_dev_set()), 141)
+        self.assertEqual(len(translator.get_train_set()), 70)
+
+    def test_translator_loads_davis_dev(self):
+        translator = wnlu.WinogradLoader()
+        self.assertEqual(len(translator.get_dev_set()), 70)
+
+    def test_translator_loads_davis_test(self):
+        translator = wnlu.WinogradLoader()
+        self.assertEqual(len(translator.get_test_set()), 143)
+
 
     def test_translator_premise(self):
         translator = wnlu.WinogradLoader()
-        example = translator.get_dev_set()[0]
+        example = translator.get_train_set()[0]
         self.assertEqual(example.get_premise(), "The city councilmen refused the demonstrators a permit because they feared violence.")
 
     def test_proper_noun_normalization(self):

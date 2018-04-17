@@ -1,26 +1,15 @@
 from wnlu.translate import WinogradSchema
 import xml.etree.ElementTree as et
-import numpy as np
 
 class WinogradLoader:
     def __init__(self):
         schemata = WinogradLoader.load_xml("datasets/winograd/WSCollection.xml")
-        # self.dev_set = schemata[0:141]
-        # self.test_set = schemata[141:]
+        self.train_set = schemata[0:70]
+        self.dev_set = schemata[70:140]
+        self.test_set = schemata[140:]
 
-        # perm = np.random.permutation(283)
-        # dev_indices = np.sort(perm[:141])
-        # test_indices = np.sort(perm[141:])
-        # np.save('dev_indices', dev_indices)
-        # np.save('test_indices', test_indices)
-
-        dev_lst = np.load('dev_indices.npy').tolist()
-        test_lst = np.load('test_indices.npy').tolist()
-
-        self.dev_set = [schemata[i] for i in dev_lst]
-        self.test_set = [schemata[i] for i in test_lst]
-
-
+    def get_train_set(self):
+        return self.train_set
 
     def get_dev_set(self):
         return self.dev_set
