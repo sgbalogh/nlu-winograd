@@ -95,3 +95,22 @@ winograd_example.answers
 ## of it within the answers list (above) using:
 winograd_example.gold_answer_idx
 ```
+
+### Working With Winograd -> NLI Translation
+
+Two scripts are provided for two different interfaces from Winograd translation into JSONL format necessary for input to the NLI models.
+
+- `convertToJSON.py` uses the translation interface specified within the `wnlu` module to generate dev and test outputs directly
+- `convertTextToJSON.py` performs a similar function, but reads in from a text file, making it more suitable for experimentation with different translation strategies; it needs to be passed a path to the input text file, followed by a path to the output JSON -- the input format expected is:
+
+```
+<Premise>
+<Hypothesis>
+<GOLD label>
+
+<Premise>
+<Hypothesis>
+<GOLD label>
+
+...
+```
