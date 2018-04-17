@@ -13,7 +13,7 @@ count = 1
 
 def binarize(tree):
     """
-    Recursively turn a tree into a binary tree.
+    Recursively turn a tree into a binary tree. Adapted from https://stackoverflow.com/questions/44742809/how-to-get-a-binary-parse-in-python
     """
     if isinstance(tree, str):
         return tree
