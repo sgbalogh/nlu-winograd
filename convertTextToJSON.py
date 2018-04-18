@@ -77,7 +77,10 @@ def get_json(input_file,output_file,parser,count):
     f.close()
     f1.close()    
     
-
+"""
+Stanford PCFG Parser 3.9.1
+Dan Klein and Christopher D. Manning. 2003. Accurate Unlexicalized Parsing. Proceedings of the 41st Meeting of the Association for Computational Linguistics, pp. 423-430.
+"""
 jar = 'apps/stanford-parser-full-2018-02-27/stanford-parser.jar'
 model = 'apps/stanford-parser-full-2018-02-27/stanford-parser-3.9.1-models.jar'
 parser = StanfordParser(model, jar, encoding='utf8')
