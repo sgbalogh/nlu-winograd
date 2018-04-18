@@ -131,7 +131,9 @@ To see truncated forms of each hypothesis, you can run the following code:
 ```python
 import wnlu
 
+variant_generator = wnlu.SentenceVariants()
 loader = wnlu.WinogradLoader()
+
 for instance in loader.get_train_set():
 	print(instance.get_premise())
 
