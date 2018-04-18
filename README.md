@@ -114,3 +114,24 @@ Two scripts are provided for two different interfaces from Winograd translation 
 
 ...
 ```
+
+### Generating Paraphrases for Sentences
+
+To see truncated forms of each hypothesis, you can run the following code:
+
+```python
+import wnlu
+
+loader = wnlu.WinogradLoader()
+for instance in loader.get_train_set():
+	print(instance.get_premise())
+
+	## Get a list of the two possible translations of the
+	## schema (i.e., the two ways of replacing the pronoun):
+	preliminary_translations = instance.get_candidate_translations()
+
+	pronoun_index = variant_generator.identify_pronoun_index(instance.get_premise(), preliminary_translations[0])
+
+	variant_generator.truncate(preliminary_translations[0], pronoun_index)
+	variant_generator.truncate(preliminary_translations[1], pronoun_index)
+  ```
