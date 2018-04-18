@@ -96,6 +96,15 @@ winograd_example.answers
 winograd_example.gold_answer_idx
 ```
 
+If you're running Windows, you may encounter a problem with setting the JAVA_HOME environment variable, even if this is configured in your PC settings. For a quick fix, add a couple of lines at the start of your code:
+```
+import os
+
+java_path = "C:/Program Files/Java/jdk1.7.0_11/bin/java.exe" 	# change the directory accordingly
+os.environ['JAVAHOME'] = java_path
+
+```
+
 ### Working With Winograd -> NLI Translation
 
 Two scripts are provided for two different interfaces from Winograd translation into JSONL format necessary for input to the NLI models.
