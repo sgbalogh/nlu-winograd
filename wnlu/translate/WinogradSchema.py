@@ -33,4 +33,9 @@ class WinogradSchema:
                 translations.append(self.premise_A + " " + Utils.capitalize_beginning(pa) + " " + self.premise_B)
             else:
                 translations.append(self.premise_A + " " + pa + " " + self.premise_B)
+                
+            # remove space before the period, if any
+            if translations[-1][-2] == " ":
+                translations[-1] = translations[-1][0:-2] + "."
+                
         return translations
