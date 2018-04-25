@@ -124,7 +124,7 @@ Two scripts are provided for two different interfaces from Winograd translation 
 ...
 ```
 
-### Generating Paraphrases for Sentences
+### Generating Truncated Translations
 
 To see truncated forms of each hypothesis, you can run the following code:
 
