@@ -136,13 +136,20 @@ loader = wnlu.WinogradLoader()
 
 for instance in loader.get_train_set():
 	print(instance.get_premise())
-
 	## Get a list of the two possible translations of the
 	## schema (i.e., the two ways of replacing the pronoun):
 	preliminary_translations = instance.get_candidate_translations()
-
 	pronoun_index = variant_generator.identify_pronoun_index(instance.get_premise(), preliminary_translations[0])
-
-	variant_generator.truncate(preliminary_translations[0], pronoun_index)
-	variant_generator.truncate(preliminary_translations[1], pronoun_index)
+	print(variant_generator.truncate(preliminary_translations[0], pronoun_index[0]))
+	print(variant_generator.truncate(preliminary_translations[1], pronoun_index[0]))
   ```
+  
+If you want to create a version capable of being used as input to `convertTextToJSON.py`, try this:
+
+```python
+import wnlu
+loader = wnlu.WinogradLoader()
+corpus = loader.get_test_set()
+wnlu.SentenceVariants.create_intermediate(corpus, "/path/to/save.txt")
+
+```

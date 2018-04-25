@@ -19,6 +19,39 @@ class SentenceVariants:
 	contraction_list = ['\'s', 'n\'t']
 
 	@staticmethod
+	def create_intermediate(corpus, output_path):
+		text_file = open(output_path, "w")
+		for idx,ws in enumerate(corpus):
+			lines = []
+			preliminary_translations = ws.get_candidate_translations()
+			pronoun_index = SentenceVariants.identify_pronoun_index(ws.get_premise(),
+																	 preliminary_translations[0])
+			premise = ws.get_premise()
+			trunc1 = SentenceVariants.truncate(preliminary_translations[0], pronoun_index[0])
+			trunc2 = SentenceVariants.truncate(preliminary_translations[1], pronoun_index[0])
+			gold_entailment_idx = ws.gold_answer_idx
+			if gold_entailment_idx == 0:
+				lines.append(premise)
+				lines.append(trunc1)
+				lines.append("entailment\n")
+				lines.append(premise)
+				lines.append(trunc2)
+				lines.append("neutral\n\n")
+			elif gold_entailment_idx == 1:
+				lines.append(premise)
+				lines.append(trunc1)
+				lines.append("neutral\n")
+				lines.append(premise)
+				lines.append(trunc2)
+				lines.append("entailment\n\n")
+			text_file.write("\n".join(lines))
+			print("Finished ", idx + 1,"/", len(corpus))
+		text_file.close()
+
+
+
+
+	@staticmethod
 	def replace_key_words(sentence):
 		"""
 		Main method to semantically paraphase a sentence by substituting its key words
