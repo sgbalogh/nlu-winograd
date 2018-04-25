@@ -15,7 +15,8 @@ class SentenceVariants:
 	keywords_verbs = ['VB', 'VBD', 'VBN', 'VBP', 'VBZ']
 	keywords_adjuncts = ['JJ', 'RB']
 	function_verbs = ['is', 'was', 'were', 'would', 'could', 'might', 'may', 'can', 'will', 'be']
-	punctuation_list = [';', ',', '.', '!']
+	punctuation_list = [';', ',', '.', '!', '\'']
+	contraction_list = ['\'s', 'n\'t']
 
 	@staticmethod
 	def replace_key_words(sentence):
@@ -131,35 +132,57 @@ class SentenceVariants:
 	@staticmethod
 	def identify_pronoun_index(premise, hypothesis):
 		"""
-		Method to identify the word that is different between two sentences
-		Returns the index of that word
+		Method to identify the word that is different between two sets of one or more sentences
+		Returns the index of that word as well as the sentence that it is in, for the hypothesis set
 		"""
-		i = 0
+		index = 0
 		new_premise = ""
 		new_hypothesis = ""
 
-		# first add spaces before punctuation marks
-		# this is to be consistent with how our parser treats punctuation
-		for char in premise:
-			if char in SentenceVariants.punctuation_list:
-				new_premise += " " + char
-			else:
-				new_premise += char
-		for char in hypothesis:
-			if char in SentenceVariants.punctuation_list:
-				new_hypothesis += " " + char
-			else:
-				new_hypothesis += char
+		new_premise = list(SentenceVariants.parser.raw_parse(premise))[0]
+		new_premise = [word for word in new_premise.leaves()]
+		new_hypothesis = list(SentenceVariants.parser.raw_parse(hypothesis))[0]
+		new_hypothesis = [word for word in new_hypothesis.leaves()]
+		# # first add spaces before punctuation marks
+		# # this is to be consistent with how our parser treats punctuation
+		# for char in premise:
+		# 	if char in SentenceVariants.contraction_list:
+		# 		new_premise += " " + char
+		# 	elif char in SentenceVariants.punctuation_list:
+		# 		new_premise += " " + char
+		# 	else:
+		# 		new_premise += char
+		# for char in hypothesis:
+		# 	if char in SentenceVariants.contraction_list:
+		# 		new_hypothesis += " " + char
+		# 	elif char in SentenceVariants.punctuation_list:
+		# 		new_hypothesis += " " + char
+		# 	else:
+		# 		new_hypothesis += char
 
-		new_premise = new_premise.split(" ")
-		new_hypothesis = new_hypothesis.split(" ")
+		# new_premise = new_premise.split(" ")
+		# new_hypothesis = new_hypothesis.split(" ")
 
-		while (i < len(new_premise)):
-			if new_premise[i] != new_hypothesis[i]:
+		# word for word comparison of the premise and hypothesis
+		while (index < len(new_premise)):
+			if new_premise[index] != new_hypothesis[index]:
 				break
-			i += 1
-		# print(i)
-		return i
+			index += 1
+
+
+		# remove redundant earlier sentences and put it all back together
+		periods_in_hypothesis = [i for i, x in enumerate(new_hypothesis) if x == "."]
+
+		if len(periods_in_hypothesis) > 1:
+			sentence_min_bound = max(x for x in periods_in_hypothesis if x < index)
+			sentence_max_bound = min(x for x in periods_in_hypothesis if x > index)
+			new_hypothesis = new_hypothesis[sentence_min_bound+1:sentence_max_bound+1]
+			index -= sentence_min_bound+1
+
+		new_hypothesis = " ".join(new_hypothesis)
+		new_hypothesis = new_hypothesis[:-2] + "."
+ 
+		return index, new_hypothesis
 
 	@staticmethod
 	def truncate(sentence, index):
@@ -173,19 +196,21 @@ class SentenceVariants:
 		# look up the tree to see if there is an S or SBAR layer, which signifies an embedded sentence.
 		# if so, cut everything below off and return the truncated bit.
 		# the treatment for S and SBAR is only slightly different because of trinary branching
-		for i in range(0,len(treeposition)):
+		for i in range(1, len(treeposition)):
 			constituent = parsed_sentence[treeposition[:-i]]
 			# print(constituent)
-			# print(constituent.label())
 
-			if (constituent.label() == 'S'):
+			if (constituent.label() == 'S') or (constituent.label() == 'ROOT'):
 				# series of transformation steps to get it back into string form
 				constituent = [word for word in constituent.leaves()]
 				for word in constituent:
 					if word == "n't":
 						constituent[constituent.index(word)-1] += word
 						constituent.remove(word)
-					if word in SentenceVariants.punctuation_list:
+					elif word == "'s":
+						constituent[constituent.index(word)-1] += word
+						constituent.remove(word)
+					elif word in SentenceVariants.punctuation_list:
 						constituent[constituent.index(word)-1] += word
 						constituent.remove(word)
 				constituent = " ".join(constituent)
@@ -195,7 +220,7 @@ class SentenceVariants:
 					constituent = constituent[0:-2] + "."
 				if constituent[-1] != ".":
 					constituent += "."
-				print(constituent)
+				# print(constituent)
 				break
 
 			elif (constituent.label() == 'SBAR'):
@@ -206,6 +231,9 @@ class SentenceVariants:
 					if word == "n't":
 						constituent[constituent.index(word)-1] += word
 						constituent.remove(word)
+					if word == "'s":
+						constituent[constituent.index(word)-1] += word
+						constituent.remove(word)
 					if word in SentenceVariants.punctuation_list:
 						constituent[constituent.index(word)-1] += word
 						constituent.remove(word)
@@ -216,7 +244,7 @@ class SentenceVariants:
 					constituent = constituent[0:-2] + "."
 				if constituent[-1] != ".":
 					constituent += "."
-				print(constituent)
+				# print(constituent)
 				break
 
 		return constituent
