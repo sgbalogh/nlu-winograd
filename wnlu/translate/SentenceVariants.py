@@ -26,21 +26,26 @@ class SentenceVariants:
 			preliminary_translations = ws.get_candidate_translations()
 			pronoun_index = SentenceVariants.identify_pronoun_index(ws.get_premise(),
 																	 preliminary_translations[0])
+			wino_id = ws.identifier
 			premise = ws.get_premise()
 			trunc1 = SentenceVariants.truncate(preliminary_translations[0], pronoun_index[0])
 			trunc2 = SentenceVariants.truncate(preliminary_translations[1], pronoun_index[0])
 			gold_entailment_idx = ws.gold_answer_idx
 			if gold_entailment_idx == 0:
+				lines.append(wino_id)
 				lines.append(premise)
 				lines.append(trunc1)
 				lines.append("entailment\n")
+				lines.append(wino_id)
 				lines.append(premise)
 				lines.append(trunc2)
 				lines.append("neutral\n\n")
 			elif gold_entailment_idx == 1:
+				lines.append(wino_id)
 				lines.append(premise)
 				lines.append(trunc1)
 				lines.append("neutral\n")
+				lines.append(wino_id)
 				lines.append(premise)
 				lines.append(trunc2)
 				lines.append("entailment\n\n")

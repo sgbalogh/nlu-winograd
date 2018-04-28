@@ -1,0 +1,19 @@
+wino-1
+This is my premise for the first Winograd.
+Here is an entailment hypothesis for the first Winograd.
+entailment
+
+wino-1
+This is my premise for the first Winograd.
+Here is a neutral hypothesis for the first Winograd.
+neutral
+
+wino-2
+This is my premise for the second Winograd.
+Here is an entailment hypothesis for the second Winograd.
+entailment
+
+wino-2
+This is my premise for the second Winograd.
+Here is a neutral hypothesis for the second Winograd.
+neutral

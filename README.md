@@ -113,10 +113,12 @@ Two scripts are provided for two different interfaces from Winograd translation 
 - `convertTextToJSON.py` performs a similar function, but reads in from a text file, making it more suitable for experimentation with different translation strategies; it needs to be passed a path to the input text file, followed by a path to the output JSON -- the input format expected is:
 
 ```
+<Winograd-ID>
 <Premise>
 <Hypothesis>
 <GOLD label>
 
+<Winograd-ID>
 <Premise>
 <Hypothesis>
 <GOLD label>
@@ -149,7 +151,7 @@ If you want to create a version capable of being used as input to `convertTextTo
 ```python
 import wnlu
 loader = wnlu.WinogradLoader()
-corpus = loader.get_test_set()
+corpus = loader.get_train_set()
 wnlu.SentenceVariants.create_intermediate(corpus, "/path/to/save.txt")
 
 ```

@@ -59,8 +59,8 @@ def get_json(input_file,output_file,parser,count):
             continue
         else:
             test = {}
-            test["pairID"] = str(count)
-            test["sentence1"] = line.strip()
+            test["pairID"] = line.strip()
+            test["sentence1"] = f.readline().strip()
             parse_string = remove_formatting(parser.raw_parse(test["sentence1"]))
             test["sentence1_parse"] = parse_string
             test["sentence1_binary_parse"] = format_binary_tree(Tree.fromstring(parse_string))

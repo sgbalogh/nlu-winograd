@@ -1,0 +1,50 @@
+wino-0
+The city councilmen refused the demonstrators a permit because they feared violence.
+The city councilmen feared violence.
+entailment
+
+wino-0
+The city councilmen refused the demonstrators a permit because they feared violence.
+The demonstrators feared violence.
+neutral
+
+wino-1
+The city councilmen refused the demonstrators a permit because they advocated violence.
+The city councilmen advocated violence.
+neutral
+
+wino-1
+The city councilmen refused the demonstrators a permit because they advocated violence.
+The demonstrators advocated violence.
+entailment
+
+wino-2
+The trophy doesn't fit into the brown suitcase because it is too large.
+The trophy is too large.
+entailment
+
+wino-2
+The trophy doesn't fit into the brown suitcase because it is too large.
+The suitcase is too large.
+neutral
+
+wino-3
+The trophy doesn't fit into the brown suitcase because it is too small.
+The trophy is too small.
+neutral
+
+wino-3
+The trophy doesn't fit into the brown suitcase because it is too small.
+The suitcase is too small.
+entailment
+
+wino-4
+Joan made sure to thank Susan for all the help she had recieved.
+Joan had recieved.
+entailment
+
+wino-4
+Joan made sure to thank Susan for all the help she had recieved.
+Susan had recieved.
+neutral
+
