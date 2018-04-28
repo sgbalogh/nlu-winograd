@@ -26,7 +26,7 @@ class WinogradLoader:
             schema = item
             schemata.append(schema)
         records = []
-        for schema in schemata:
+        for idx,schema in enumerate(schemata):
             record = {"answers": [], "correct_answer": -1}
             for child in schema:
                 if child.tag == "text":
@@ -50,7 +50,7 @@ class WinogradLoader:
                         record["correct_answer"] = 1
                     else:
                         print(ca)
-            records.append(WinogradSchema.WinogradSchema(record['premise_a'], record['premise_pronoun'], record['premise_b'], record['answers'], record['correct_answer']))
+            records.append(WinogradSchema.WinogradSchema("wino-"+str(idx), record['premise_a'], record['premise_pronoun'], record['premise_b'], record['answers'], record['correct_answer']))
         return records
 
 

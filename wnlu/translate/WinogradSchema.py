@@ -10,7 +10,8 @@ from wnlu.translate.Utils import Utils
 ####
 
 class WinogradSchema:
-    def __init__(self, premise_A, pron, premise_B, answer_list, correct_answer=None):
+    def __init__(self, id, premise_A, pron, premise_B, answer_list, correct_answer=None):
+        self.identifier = id
         self.premise_A = str.strip(premise_A)
         self.pronoun = str.lower(str.strip(pron))
         self.premise_B = str.strip(premise_B)
