@@ -31,7 +31,7 @@ class WinogradLoader:
 
     @staticmethod
     def rahman_to_winograd(record, idx):
-        premise_segments = list(map(lambda x: x.strip(), record['scheme'].split(record['pronoun'])))
+        premise_segments = list(map(lambda x: x.strip(), record['scheme'].split(" " + record['pronoun'])))
         premise_A = premise_segments[0]
         premise_B = premise_segments[1]
         correct_index = record['options'].index(record['correct'])
