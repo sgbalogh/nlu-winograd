@@ -94,6 +94,10 @@ winograd_example.answers
 ## If we want to see the GOLD label, we can get the index
 ## of it within the answers list (above) using:
 winograd_example.gold_answer_idx
+
+
+## Load from the Rahman/Ng corpus instead of Winograd:
+rahman_ng_set = loader.get_rahman_ng_set()
 ```
 
 If you're running Windows, you may encounter a problem with setting the JAVA_HOME environment variable, even if this is configured in your PC settings. For a quick fix, add a couple of lines at the start of your code:
