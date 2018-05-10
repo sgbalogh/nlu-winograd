@@ -159,3 +159,14 @@ corpus = loader.get_train_set()
 wnlu.SentenceVariants.create_intermediate(corpus, "/path/to/save.txt")
 
 ```
+### Generating Paraphrases
+
+To see paraphrases of the Winograd train, dev and test sets and the Rahman and Ng set, run the following code on the command line:
+
+```bash
+python ./ParaphrasingStrategies.py
+
+```
+This will generate four text files, namely, train, dev and test sets of the Winograd schema and the entire set of the Rahman and Ng Winograd Schema. These files can be fed into `convertTextToJSON.py` to generate the json files that can be fed into the trained NLI models.
+
+

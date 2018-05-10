@@ -125,10 +125,11 @@ def generate_paraphrase_output(api_key,id,premise,hypothesis,label):
         lines.append("")
     return "\n".join(lines)
 
-def get_options(f,dataset):
+def get_options(dataset,filename):
 	"""
 	Method to accumulate options for each premise-hypothesis pair under consideration
 	"""
+	f = open(filename,'w')
 	for instance in dataset:
 		i,k = 0,0
 		string_end = True
@@ -141,7 +142,8 @@ def get_options(f,dataset):
 			noun.append('')
 			new_noun.append('')
 			nounupper.append('')
-			hypothesis.append('')		
+			hypothesis.append('')
+				
 		premise = instance.get_premise()
 		#variant_generator = wnlu.SentenceVariants()
 		if premise[-2] == ' ':
@@ -294,7 +296,7 @@ def get_options(f,dataset):
 				truncated[z] = truncated[z].replace(noun[z],pronoun,1)
 				
 		
-		#construct options based on connectives in hypotheses
+		#construct options based on connectives in hypotheses. If connectives are not identified, use google translate to generate paraphrases
 		if connective[0] in ['because','since','as'] and premise.count('.') == 1:
 			option1 = truncated[0] + " so " + remainder[0]
 			option2 = truncated[1] + " so " + remainder[1]
@@ -420,12 +422,14 @@ def get_options(f,dataset):
 			else:
 				f.write('neutral\n')
 		f.write("\n")
+	f.close()
 				
 loader = wnlu.WinogradLoader()
-f = open('traindev.txt','w')
 train_set = loader.get_train_set()
 dev_set = loader.get_dev_set()
 test_set = loader.get_test_set()
-rn = loader.get_rahman_ng_set()
-get_options(f,train_set)
-get_options(f,dev_set)
+rahman_ng_set = loader.get_rahman_ng_set()
+get_options(train_set,'paraphrase_train.txt')		# change path as needed
+get_options(dev_set,'paraphrase_dev.txt')
+get_options(test_set,'paraphrase_test.txt')
+get_options(rahman_ng_set,'paraphrase_rahman_ng_set.txt')
