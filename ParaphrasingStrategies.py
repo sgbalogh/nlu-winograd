@@ -1,5 +1,7 @@
 from nltk import pos_tag, word_tokenize
 import wnlu.translate
+import json
+import requests
 
 def accusative(pronoun):
 	"""
@@ -7,9 +9,9 @@ def accusative(pronoun):
 	"""
 	if pronoun == 'she':
 		return 'her'
-	elif pronoun == 'he':
+	elif pronoun in ['he','his']:
 		return 'him'
-	elif pronoun == 'they':
+	elif pronoun in ['they','their']:
 		return 'them'
 	else:
 		return pronoun
@@ -20,9 +22,9 @@ def nominative(pronoun):
 	"""
 	if pronoun == 'her':
 		return 'she'
-	elif pronoun == 'him':
+	elif pronoun in ['him','his']:
 		return 'he'
-	elif pronoun == 'them':
+	elif pronoun in ['them','their']:
 		return 'they'
 	else:
 		return pronoun
@@ -35,7 +37,6 @@ def make_noun(word):
 	if word.endswith('\'s'):
 		word = word.replace('\'s','',1)
 	return word
-	
 	
 def cleanup(sentence,connective):
 	"""
@@ -96,6 +97,34 @@ def get_noun_phrase(noun,premise):
 					new_noun = premise.split()[i-1] + " " + word
 	return new_noun
 
+def translate(api_key, text, source, target):
+    api_endpoint = "https://translation.googleapis.com/language/translate/v2?key=" + api_key
+    headers = {'Content-Type': 'application/json'}
+    query = {
+        'q': text,
+        'source': source,
+        'target': target,
+        'format': 'text'
+    }
+    response = requests.post(api_endpoint, headers=headers, json=query)
+    return response.json()
+
+def paraphrase(api_key, text, via_language):
+    translated_result = translate(api_key, text, "en", via_language)
+    paraphrase = translate(api_key, translated_result['data']['translations'][0]['translatedText'], via_language, "en")
+    return paraphrase['data']['translations'][0]['translatedText']
+
+def generate_paraphrase_output(api_key,id,premise,hypothesis,label):
+    lines = []
+    languages = ['es','hu','fr', 'eu', 'hi']
+    for language in languages:
+        lines.append(id)
+        lines.append(premise)
+        lines.append(paraphrase(api_key, hypothesis, language))
+        lines.append(label)
+        lines.append("")
+    return "\n".join(lines)
+
 def get_options(f,dataset):
 	"""
 	Method to accumulate options for each premise-hypothesis pair under consideration
@@ -103,7 +132,7 @@ def get_options(f,dataset):
 	for instance in dataset:
 		i,k = 0,0
 		string_end = True
-		option1,option2,option3,option4 = '','','',''
+		option1,option2,option3,option4,option5,option6,option7,option9 = '','','','','','','',''
 		remainder,truncated,noun,new_noun,hypothesis,nounupper = [],[],[],[],[],[]
 		remainder3 = ''
 		for z in range(2):
@@ -112,9 +141,9 @@ def get_options(f,dataset):
 			noun.append('')
 			new_noun.append('')
 			nounupper.append('')
-			hypothesis.append('')
+			hypothesis.append('')		
 		premise = instance.get_premise()
-		variant_generator = wnlu.SentenceVariants()
+		#variant_generator = wnlu.SentenceVariants()
 		if premise[-2] == ' ':
 			premise = premise[:-2] + '.'
 		if premise[-1] not in ['.','!']:
@@ -126,6 +155,12 @@ def get_options(f,dataset):
 			sentence_split[1] = sentence_split[1][:2].upper() + sentence_split[1][2:]
 			premise = sentence_split[0] + "." + sentence_split[1] + "."
 				
+		if premise.count('.') == 3:
+			sentence_split = premise.split('.')
+			sentence_split[1] = sentence_split[1][:2].upper() + sentence_split[1][2:]
+			sentence_split[2] = sentence_split[2][:2].upper() + sentence_split[2][2:]
+			premise = sentence_split[0] + "." + sentence_split[1] + "." + sentence_split[2] + "."
+			
 		premise_split = premise.split()
 		possible_translations = instance.get_candidate_translations()
 		
@@ -165,7 +200,8 @@ def get_options(f,dataset):
 		#get connective of hypotheses
 		connective = pos_tag(premise_split)[i-1]
 		i = i - 1
-		while '.' not in connective[0] and ',' not in connective[0] and (connective[0] in ['over','around','through','in'] or connective[1] not in ['IN','CC']):
+		
+		while '.' not in connective[0] and ',' not in connective[0] and connective[1] not in ['IN','CC']:
 			remainder3 = premise_split[i] + " " + remainder3
 			i = i - 1
 			connective = pos_tag(premise_split)[i]
@@ -176,6 +212,7 @@ def get_options(f,dataset):
 				truncated[z] = remainder3 + " " + truncated[z]
 				remainder[z] = remainder[z].replace(remainder3,'')
 				remainder[z] = remainder[z].strip()
+		
 		for z in range(2):
 			remainder[z] = remainder[z].strip()
 			truncated[z] = truncated[z][:1].upper() + truncated[z][1:]
@@ -255,9 +292,10 @@ def get_options(f,dataset):
 		for z in range(2):
 			if truncated[z].count(make_noun(noun[z])) > 1:
 				truncated[z] = truncated[z].replace(noun[z],pronoun,1)
+				
 		
 		#construct options based on connectives in hypotheses
-		if connective[0] in ['because','since','as']:
+		if connective[0] in ['because','since','as'] and premise.count('.') == 1:
 			option1 = truncated[0] + " so " + remainder[0]
 			option2 = truncated[1] + " so " + remainder[1]
 			option1 = cleanup(option1,connective[0])
@@ -265,17 +303,17 @@ def get_options(f,dataset):
 			option3 = possible_translations[0]
 			option4 = possible_translations[1]
 			
-		elif connective[0] in ['that']:
+		elif connective[0] in ['that'] and premise.count('.') == 1:
 			option1 = truncated[0] + " so " + remainder[0]
 			option2 = truncated[1] + " so " + remainder[1]
 			option1 = cleanup(option1,connective[0])
 			option2 = cleanup(option2,connective[0])
 		
-		elif connective[0] in ['hence','so','thus','therefore']:
+		elif connective[0] in ['hence','so','thus','therefore'] and premise.count('.') == 1:
 			option1 = cleanup(truncated[0],connective[0])
 			option2 = cleanup(truncated[1],connective[0])
 		
-		elif connective[0] in ['after']:
+		elif connective[0] in ['after'] and premise.count('.') == 1:
 			option1 = truncated[0] + ", then " + remainder[0]
 			option2 = truncated[1] + ", then " + remainder[1]
 			option1 = cleanup(option1,connective[0])
@@ -283,7 +321,7 @@ def get_options(f,dataset):
 			option3 =  possible_translations[0]
 			option4 =  possible_translations[1]
 			
-		elif connective[0] in ['then']:
+		elif connective[0] in ['then'] and premise.count('.') == 1:
 			option1 = "After " + truncated[0] + ", " + remainder[0]
 			option2 = "After " + truncated[1] + ", " + remainder[1]
 			option1 = cleanup(option1,connective[0])
@@ -291,11 +329,11 @@ def get_options(f,dataset):
 			option3 =  possible_translations[0]
 			option4 =  possible_translations[1]
 		
-		elif connective[0] in ['but']:
+		elif connective[0] in ['but'] and premise.count('.') == 1:
 			option1 = cleanup(truncated[0],connective[0])
 			option2 = cleanup(truncated[1],connective[0])
 
-		elif premise_split[0] in ['If'] and connective[1] not in ['IN']:
+		elif premise_split[0] in ['If'] and connective[1] not in ['IN'] and premise.count('.') == 1:
 			option1 = truncated[0] + " if " + remainder[0]
 			option2 = truncated[1] + " if " + remainder[1]
 			option1 = option1.replace('If','',1)
@@ -303,7 +341,7 @@ def get_options(f,dataset):
 			option1 = cleanup(option1,'')
 			option2 = cleanup(option2,'')
 			
-		elif premise_split[0] in ['Because','Since','As'] and connective[1] not in ['IN']:
+		elif premise_split[0] in ['Because','Since','As'] and connective[1] not in ['IN'] and premise.count('.') == 1:
 			option1 = truncated[0] + " because " + remainder[0]
 			option2 = truncated[1] + " because " + remainder[1]
 			option1 = option1.replace('Since','',1)
@@ -316,16 +354,8 @@ def get_options(f,dataset):
 			option2 = cleanup(option2,'')
 			option3 =  possible_translations[0]
 			option4 =  possible_translations[1]
-			
-		elif connective[0] in ['until']:
-			option1 = "Until " + truncated[0] + ", " + remainder[0]
-			option2 = "Until " + truncated[1] + ", " + remainder[1]
-			option1 = cleanup(option1,connective[0])
-			option2 = cleanup(option2,connective[0])
-			option3 =  possible_translations[0]
-			option4 =  possible_translations[1]
-			
-		elif connective[0] == 'and':
+            
+		elif connective[0] == 'and' and premise.count('.') == 1:
 			if premise.count(',') == 2:
 				split = premise.split(',')
 				truncated[0] = truncated[0][0].lower() + truncated[0][1:]
@@ -338,7 +368,7 @@ def get_options(f,dataset):
 				option1 = possible_translations[0]
 				option2 = possible_translations[1]
 			
-		elif connective[0] in ['though','although'] or (connective[0] == 'though' and premise_split[premise_split.index(connective[0]) - 1] == 'even'):
+		elif connective[0] in ['though','although'] or (connective[0] == 'though' and premise_split[premise_split.index(connective[0]) - 1] == 'even') and premise.count('.') == 1:
 			option1 = truncated[0] + " but " + remainder[0]
 			option2 = truncated[1] + " but " + remainder[1]
 			if premise_split[premise_split.index(connective[0]) - 1] == 'even':
@@ -347,48 +377,56 @@ def get_options(f,dataset):
 				connective = connective[0]
 			option1 = cleanup(option1,connective)
 			option2 = cleanup(option2,connective)
+		
+		else:
+			if instance.gold_answer_idx == 0:
+				f.write(generate_paraphrase_output("AIzaSyAWM-84q4_vcwWymfoSboj5F6vcQREDFCU",instance.identifier,premise,possible_translations[0],'entailment'))
+				f.write(generate_paraphrase_output("AIzaSyAWM-84q4_vcwWymfoSboj5F6vcQREDFCU",instance.identifier,premise,possible_translations[1],'neutral'))
+			else:
+				f.write(generate_paraphrase_output("AIzaSyAWM-84q4_vcwWymfoSboj5F6vcQREDFCU",instance.identifier,premise,possible_translations[1],'entailment'))
+				f.write(generate_paraphrase_output("AIzaSyAWM-84q4_vcwWymfoSboj5F6vcQREDFCU",instance.identifier,premise,possible_translations[0],'neutral'))
 			
-		elif premise.count('.') == 1:
-			option1 = possible_translations[0]
-			option2 = possible_translations[1]
-
-
+		
 		#print premise-hypothesis options to file to be fed into the model
-		if premise.count('.') == 1:
+		if option1 != '':
+			f.write(instance.identifier + "\n")
 			f.write(premise + "\n")
 			f.write(option1 + "\n")
 			if instance.gold_answer_idx == 0:
 				f.write('entailment\n')
 			else:
 				f.write('neutral\n')
+			f.write(instance.identifier + "\n")
 			f.write(premise + "\n")
 			f.write(option2 + "\n")
 			if instance.gold_answer_idx == 1:
 				f.write('entailment\n')
 			else:
 				f.write('neutral\n')
-			
-			if option3 != '':
-				f.write(premise + "\n")
-				f.write(option3 + "\n")
-				if instance.gold_answer_idx == 0:
-					f.write('entailment\n')
-				else:
-					f.write('neutral\n')
-				f.write(premise + "\n")
-				f.write(option4 + "\n")
-				if instance.gold_answer_idx == 1:
-					f.write('entailment\n')
-				else:
-					f.write('neutral\n')
-			f.write("\n")
-
 		
+		if option3 != '':
+			f.write(instance.identifier + "\n")
+			f.write(premise + "\n")
+			f.write(option3 + "\n")
+			if instance.gold_answer_idx == 0:
+				f.write('entailment\n')
+			else:
+				f.write('neutral\n')
+			f.write(instance.identifier + "\n")
+			f.write(premise + "\n")
+			f.write(option4 + "\n")
+			if instance.gold_answer_idx == 1:
+				f.write('entailment\n')
+			else:
+				f.write('neutral\n')
+		f.write("\n")
+				
 loader = wnlu.WinogradLoader()
-f = open('traindev.txt','w')
+f = open('rahmanng.txt','w')
 train_set = loader.get_train_set()
 dev_set = loader.get_dev_set()
 test_set = loader.get_test_set()
-get_options(f,train_set)
-get_options(f,dev_set)
-#get_options(f,test_set)
+rn = loader.get_rahman_ng_set()
+#get_options(f,train_set)
+#get_options(f,dev_set)
+get_options(f,rn)
