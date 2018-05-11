@@ -129,26 +129,6 @@ Two scripts are provided for two different interfaces from Winograd translation 
 
 ...
 ```
-
-### Generating Truncated Translations
-
-To see truncated forms of each hypothesis, you can run the following code:
-
-```python
-import wnlu
-
-variant_generator = wnlu.SentenceVariants()
-loader = wnlu.WinogradLoader()
-
-for instance in loader.get_train_set():
-	print(instance.get_premise())
-	## Get a list of the two possible translations of the
-	## schema (i.e., the two ways of replacing the pronoun):
-	preliminary_translations = instance.get_candidate_translations()
-	pronoun_index = variant_generator.identify_pronoun_index(instance.get_premise(), preliminary_translations[0])
-	print(variant_generator.truncate(preliminary_translations[0], pronoun_index[0]))
-	print(variant_generator.truncate(preliminary_translations[1], pronoun_index[0]))
-  ```
   
 If you want to create a version capable of being used as input to `convertTextToJSON.py`, try this:
 
@@ -165,6 +145,13 @@ To see paraphrases of the Winograd train, dev and test sets and the Rahman and N
 
 ```bash
 python ./ParaphrasingStrategies.py
+
+```
+
+Similarly, to generate truncated versions of the Winograd sets you can run:
+
+```bash
+python ./SentenceVariants.py
 
 ```
 This will generate four text files, namely, train, dev and test sets of the Winograd schema and the entire set of the Rahman and Ng Winograd Schema. These files can be fed into `convertTextToJSON.py` to generate the json files that can be fed into the trained NLI models.
